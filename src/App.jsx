@@ -3,7 +3,7 @@ import './App.css';
 import ScreenPokemones from './components/ScreenPokemones';
 
 function App() {
-  const[pokemones, setPokemones] = useState('')
+  const [pokemones, setPokemones] = useState('');
   const pokeUrl = 'https://pokeapi.co/api/v2/pokemon';
 
   const fetchData = async (url) => {
@@ -15,14 +15,25 @@ function App() {
   const pokemonData = async (pokeUrl) => {
     const response = await fetchData(pokeUrl);
 
-    const dataPromises = response.results.map((poke) => (
-      fetchData(pokeUrl+'/'+ poke.name)
-    ));
+    const dataPromises = response.results.map((poke) =>
+      fetchData(pokeUrl + '/' + poke.name)
+    );
 
-   // console.log(dataPromises);
+    // console.log(dataPromises);
     const pokemonWithImages = await Promise.all(dataPromises);
-    setPokemones(pokemonWithImages)
-  console.log(pokemonWithImages);
+
+    const addAttack = pokemonWithImages.map((pokemon) => {
+      const attackValue = pokemon.moves.map((move) => ({
+        ...move,
+        attack: Math.floor(Math.random() * 50),
+      }));
+
+      return { ...pokemon, moves: attackValue };
+    });
+
+    console.log(addAttack);
+    setPokemones(addAttack);
+    // console.log(pokemonWithImages);
   };
 
   useEffect(() => {
