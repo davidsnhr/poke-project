@@ -7,8 +7,8 @@ const ScreenPokemones = ({ pokemones }) => {
     <div className="screen-container">
       {pokemones?.map((pokemon) => (
         <div key={pokemon.id} className='pokemon-item' >
-            {pokemon.name}
             <img src={pokemon.sprites.front_default} alt="pokemon image" />
+            {pokemon.name}
         </div>
       ))}
     </div>
