@@ -59,7 +59,7 @@ function App() {
                 <button className="btn-up"></button>
                 <button className="btn-down"></button>
               </div>
-              <button className="btn-right"></button>
+              <button className="btn-left"></button>
             </div>
             {/* buttons select */}
             <div className="container-select">
