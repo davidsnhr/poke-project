@@ -1,6 +1,34 @@
+import { useEffect, useState } from 'react';
 import './App.css';
+import ScreenPokemones from './components/ScreenPokemones';
 
 function App() {
+  const[pokemones, setPokemones] = useState('')
+  const pokeUrl = 'https://pokeapi.co/api/v2/pokemon';
+
+  const fetchData = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  };
+
+  const pokemonData = async (pokeUrl) => {
+    const response = await fetchData(pokeUrl);
+
+    const dataPromises = response.results.map((poke) => (
+      fetchData(pokeUrl+'/'+ poke.name)
+    ));
+
+   // console.log(dataPromises);
+    const pokemonWithImages = await Promise.all(dataPromises);
+    setPokemones(pokemonWithImages)
+  console.log(pokemonWithImages);
+  };
+
+  useEffect(() => {
+    pokemonData(pokeUrl);
+  }, []);
+
   return (
     <>
       <div className="main-container">
@@ -8,10 +36,12 @@ function App() {
         {/* screen */}
         <div className="layout-game">
           <div className="container-screen">
-            <div className="screen-layout"></div>
+            <div className="screen-layout">
+              {pokemones && <ScreenPokemones pokemones={pokemones} />}
+            </div>
           </div>
           <div className="buttons-container">
-          {/* buttons pad*/}
+            {/* buttons pad*/}
             <div className="container-pad">
               <button className="btn-right"></button>
               <div className="container-up-down">
