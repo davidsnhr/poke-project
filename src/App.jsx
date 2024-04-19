@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import ScreenPokemones from './components/ScreenPokemones';
+import BattleScreen from './components/BattleScreen';
 
 function App() {
   const [pokemones, setPokemones] = useState('');
   const [position, setPosition] = useState(0);
 
   const [myPokeSelection, setMyPokeSelection] = useState([]);
+  const [computerRandomSelection, setcomputerRandomSelection] = useState([]);
 
+  const [startGame, setStartGame] = useState(false);
 
+  const [myHealth, setHealth] = useState(100);
+  const [enemyHealth, setEnemyHealth] = useState(100);
   const pokeUrl = 'https://pokeapi.co/api/v2/pokemon';
 
   const fetchData = async (url) => {
@@ -57,16 +62,23 @@ function App() {
   const filterSelection = () => {
     const mySelection = pokemones.filter((value, idx) => position === idx);
     setMyPokeSelection(mySelection);
-    console.log(mySelection);
+    // console.log(mySelection);
 
-    computerSelection();
+    getComputerSelection();
   };
 
-  const computerSelection = () => {
+  const getComputerSelection = () => {
     const computerPos = Math.floor(Math.random() * 20);
-    const computerSelection = pokemones.filter((value, idx) => computerPos === idx);
+    const computerSelection = pokemones.filter(
+      (value, idx) => computerPos === idx
+    );
 
-    console.log(computerSelection);
+    setcomputerRandomSelection(computerSelection);
+    // console.log(computerSelection);
+  };
+
+  const handleStart = () => {
+    setStartGame(true);
   };
 
   useEffect(() => {
@@ -81,8 +93,17 @@ function App() {
         <div className="layout-game">
           <div className="container-screen">
             <div className="screen-layout">
-              {pokemones && (
-                <ScreenPokemones pokemones={pokemones} position={position} />
+              {startGame ? (
+                <BattleScreen
+                  myHealth={enemyHealth}
+                  enemyHealth={enemyHealth}
+                  myPokeSelection={myPokeSelection}
+                  computerRandomSelection={computerRandomSelection}
+                />
+              ) : (
+                pokemones && (
+                  <ScreenPokemones pokemones={pokemones} position={position} />
+                )
               )}
             </div>
           </div>
@@ -112,7 +133,10 @@ function App() {
                 <div>select</div>
               </div>
               <div className="container-start">
-                <button className="btn-start"></button>
+                <button
+                  className="btn-start"
+                  onClick={() => handleStart()}
+                ></button>
                 <div>start</div>
               </div>
             </div>
